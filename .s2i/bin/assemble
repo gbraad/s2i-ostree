@@ -1,0 +1,20 @@
+#!/bin/bash -e
+if [[ "$1" == "-h" ]]; then
+	exec /usr/libexec/s2i/usage
+fi
+
+echo "---> Initializing repodir: ${REPODIR}..."
+ostree --repo=${REPODIR} init --mode=archive-z2
+
+echo "---> Installing application source..."
+cp -Rf /tmp/src/. ./
+
+echo "---> Evaluating configuration file..."
+eval "$(/usr/libexec/s2i/ini config.ini DEFAULT)"
+tree_file="${os_name}-${tree_name}.json"
+
+echo "---> Using ${tree_file} for build..."
+rpm-ostree compose tree \
+    --repo=${REPODIR} \
+    ${tree_file}
+

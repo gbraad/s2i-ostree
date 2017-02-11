@@ -1,0 +1,10 @@
+#!/bin/sh
+# https://debian-administration.org/article/55/Question_Making_efficient_backups_on_Debian
+[ -z "$1" ] || [ -z "$2" ] && exit 1
+sed -e 's/[[:space:]]*\=[[:space:]]*/=/g' \
+    -e 's/;.*$//' \
+    -e 's/[[:space:]]*$//' \
+    -e 's/^[[:space:]]*//' \
+    -e "s/^\(.*\)=\([^\"']*\)$/\1=\"\2\"/" \
+   < $1 \
+   | sed -n -e "/^\[$2\]/,/^\s*\[/{/^[^;].*\=.*/p;}"

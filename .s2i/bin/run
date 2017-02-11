@@ -1,0 +1,2 @@
+#!/bin/bash -e
+exec ostree trivial-httpd -p 8080 /srv/repo
